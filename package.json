@@ -1,0 +1,22 @@
+{
+  "name": "querytyper",
+  "version": "1.0.0",
+  "description": "Convert SQL annotations into Typescript files",
+  "main": "querytyper.js",
+  "bin": {
+    "querytyper": "./querytyper.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Portchain/querytyper.git"
+  },
+  "author": "Sergei Patiakin <sergei.patiakin@gmail.com>",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/Portchain/querytyper/issues"
+  },
+  "homepage": "https://github.com/Portchain/querytyper#readme"
+}
