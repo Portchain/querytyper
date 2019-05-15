@@ -10,15 +10,31 @@ QueryTyper supports one or more *root directories*.
 A root directory can contain one or more *query collection directories*.
 A query collection directory can contain one or more *query files*.
 Query files should have the name pattern `*.query.sql`
+
 E.g. a root directory could be `server/queries`, a query collection directory could be `server/queries/users`, and a query file could be `server/queries/users/addUsers.query.sql`.
 
+## Query Annotations
+Query files can contain single-line annotations using the syntax `-- @annotationName [annotationValue]`.
+Every annotation is a SQL comment, so does not affect the query's behavior.
+### Available query annotations
+#### @arg argName: argType
+Defines a query argument `argName` of type `argType`
+#### @return fieldName: fieldType
+Defines a query return field `fieldName` or type `fieldType`
+#### @extendsArgs dt.ArgType
+Imports multiple query arguments from a custom type `ArgType`
+#### @extendsResults dt.ResultType
+Imports multiple query results from a custom type `ResultType`
+#### @unique
+Marks the query as returning zero or one row
+
 ## Configuration file
-The configuration file should be named `querytyper.config.json` and should be placed in the package root directory.
+The configuration file should be named `querytyper.config.json` and should be placed in the npm package root directory.
 ### Configuration fields
 #### rootDirs
-Defines the paths of the root directories. Paths are specified relative to the npm project root. 
+Defines the paths of the root directories. Paths are specified relative to the npm package root. 
 #### queryTemplatePath
-Defines the path to the query template, relative to the npm project root.
+Defines the path to the query template, relative to the npm package root.
 #### dataTypesPath
 Defines the path to a data types Typescript module, relative to the queries. QueryTyper annotations can use custom types from that module.
 #### exportsFileName
