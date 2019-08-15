@@ -39,6 +39,8 @@ Defines the path to the query template, relative to the npm package root.
 Defines the path to a data types Typescript module, relative to the queries. QueryTyper annotations can use custom types from that module.
 #### exportsFileName
 QueryTyper will create an exports file inside each query collection directory. `exportsFileName` defines the name of the exports file.
+### helperMapping
+QueryTyper will support multiple function to execute sql code. You can adde them as property of this object where property name will be the keyword used in sql header and value will be the name of the function to call.
 
 ### Example configuration file
 ```json
@@ -46,7 +48,11 @@ QueryTyper will create an exports file inside each query collection directory. `
     "rootDirs": ["server/queries", "tests/queries"],
     "queryTemplatePath": "server/queries/query.ts.template",
     "dataTypesPath": "../../../common/DataTypes",
-    "exportsFileName": "index.ts"
+    "exportsFileName": "index.ts",
+    "helperMapping": {
+        "default": "buildQuery",
+        "unique": "buildQueryWithUniqueResult"
+    }
 }
 ```
 ## Query template
@@ -67,7 +73,8 @@ A query template can contain *symbols* prefixed by `@` which will be replaced by
 `@extendResult` is replaced with an `extends` statement for the result type
 #### @queryName
 `@queryName` is replaced with the query name
-
+#### @helperFunction
+`@helperFunction` is replaced with non deafult query execution function
 ### Example query template:
 ```ts
 /* tslint:disable */

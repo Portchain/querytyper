@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 
 const queryTyperConfig = JSON.parse(fs.readFileSync('querytyper.config.json'))
+
 const queryTsTemplate = fs.readFileSync(queryTyperConfig.queryTemplatePath, 'utf8')
 const codegenWarning = '// WARNING: THIS CODE IS AUTO-GENERATED. ANY MANUAL EDITS WILL BE OVERWRITTEN WITHOUT WARNING\n'
 
@@ -69,7 +70,10 @@ queryTyperConfig.rootDirs.forEach(rootDir => {
       const resultFields = items.filter(item => item['type'] == 'return').map(item => item['value'])
       const extendResult = items.filter(item => item['type'] == 'extendsResults').map(item => item['value'])
       const extendArg = items.filter(item => item['type'] == 'extendsArgs').map(item => item['value'])
-      const helperFunction = items.filter(item => item['type'] == 'unique').length > 0 ? 'buildQueryWithUniqueResult' : 'buildQuery'
+      let helperFunction = items.filter(item => item['type'] == 'helperFunction').map(item => queryTyperConfig.helperMapping[item['value']])[0]
+      if(!helperFunction) {
+        helperFunction = queryTyperConfig.helperMapping.default
+      }
       const queryName = subdirItem.replace('.query.sql', '')
       if (items.filter(item => ['arg', 'return'].includes(item['type']) && item['value'].includes('Moment;')).length > 0) {
         // hack: import Moment if the argument string contains 'Moment'
