@@ -44,6 +44,12 @@ function writeIfChanged(filePath, fileContents) {
   console.info(`querytyper: wrote ${filePath}`)
 }
 
+function writeExportStatement(queryName) {
+  const tsIgnoreStatement = '// @ts-ignore'
+  const exportStatement = `export { ${queryName}, Result as ${queryName}Result, Arguments as ${queryName}Args } from './${queryName}.query';`
+  return tsIgnoreStatement + '\n' + exportStatement
+}
+
 queryTyperConfig.rootDirs.forEach(rootDir => {
   fs.readdirSync(rootDir).forEach(dirItem => {
     dirItemAbs = path.join(rootDir, dirItem)
@@ -114,7 +120,7 @@ queryTyperConfig.rootDirs.forEach(rootDir => {
     // Write exports file
     const exportsFileBody =
       generatedQueryNames.length > 0
-        ? generatedQueryNames.map(queryName => `export { ${queryName}, Result as ${queryName}Result, Arguments as ${queryName}Args } from './${queryName}.query';`).join('\n') + '\n'
+        ? generatedQueryNames.map(writeExportStatement).join('\n') + '\n'
         : ''
     writeIfChanged(path.join(dirItemAbs, queryTyperConfig.exportsFileName), codegenWarning + exportsFileBody)
   })
