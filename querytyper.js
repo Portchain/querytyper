@@ -5,7 +5,7 @@ const path = require('path')
 const queryTyperConfig = JSON.parse(fs.readFileSync('querytyper.config.json'))
 
 const queryTsTemplate = fs.readFileSync(queryTyperConfig.queryTemplatePath, 'utf8')
-const codegenWarning = '// WARNING: THIS CODE IS AUTO-GENERATED. ANY MANUAL EDITS WILL BE OVERWRITTEN WITHOUT WARNING\n'
+const codegenWarning = '\n// WARNING: THE CONTENT OF THIS FILE IS AUTO-GENERATED. ANY MANUAL EDITS WILL BE OVERWRITTEN WITHOUT WARNING.'
 
 function getQueryTs(queryName, argumentFields, resultFields, helperFunction, extraImports, extendResultString, extendArgString) {
   let contents = codegenWarning + queryTsTemplate
@@ -114,8 +114,10 @@ queryTyperConfig.rootDirs.forEach(rootDir => {
     // Write exports file
     const exportsFileBody =
       generatedQueryNames.length > 0
-        ? generatedQueryNames.map(queryName => `export { ${queryName}, Result as ${queryName}Result, Arguments as ${queryName}Args } from './${queryName}.query';`).join('\n') + '\n'
+        ? generatedQueryNames.map(queryName => `export { ${queryName} } from './${queryName}.query';`).join('\n') + '\n'
         : ''
-    writeIfChanged(path.join(dirItemAbs, queryTyperConfig.exportsFileName), codegenWarning + exportsFileBody)
+    if (exportsFileBody !== '') {
+      writeIfChanged(path.join(dirItemAbs, queryTyperConfig.exportsFileName), exportsFileBody + codegenWarning)
+    }
   })
 })
